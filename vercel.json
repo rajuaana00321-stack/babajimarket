@@ -1,0 +1,9 @@
+{
+  "cleanUrls": true,
+  "rewrites": [
+    { "source": "/pixcel", "destination": "/pixcel.html" },
+    { "source": "/pixel", "destination": "/pixcel.html" },
+    { "source": "/pixcel/", "destination": "/pixcel.html" },
+    { "source": "/pixel/", "destination": "/pixcel.html" }
+  ]
+}

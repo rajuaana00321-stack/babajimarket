@@ -14,9 +14,8 @@
   
   <link rel="stylesheet" href="style.css">
   <style>
-    /* Admin/Config Panel Specific Styles */
     .admin-container {
-      max-width: 620px;
+      max-width: 640px;
     }
 
     .admin-card {
@@ -29,6 +28,25 @@
       display: flex;
       flex-direction: column;
       gap: 22px;
+    }
+
+    .env-badge-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #090909;
+      border: 1px solid rgba(255, 228, 0, 0.25);
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 0.8rem;
+    }
+
+    .env-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: 700;
+      color: var(--color-yellow);
     }
 
     .form-group {
@@ -173,6 +191,125 @@
       color: var(--color-black);
     }
 
+    /* Modal / Action Dialog */
+    .deploy-modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+      padding: 20px;
+    }
+
+    .deploy-modal-backdrop.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .deploy-modal {
+      background: #111111;
+      border: 2px solid var(--color-yellow);
+      border-radius: var(--border-radius-lg);
+      padding: 24px;
+      max-width: 520px;
+      width: 100%;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.9), 0 0 40px rgba(255, 228, 0, 0.3);
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .modal-title {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: var(--color-yellow);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .modal-body {
+      font-size: 0.88rem;
+      color: var(--color-text-dim);
+      line-height: 1.5;
+    }
+
+    .modal-json-box {
+      background: #050505;
+      border: 1px solid rgba(255, 228, 0, 0.3);
+      border-radius: 8px;
+      padding: 12px;
+      font-family: monospace;
+      font-size: 0.78rem;
+      color: var(--color-yellow);
+      white-space: pre;
+      max-height: 140px;
+      overflow-y: auto;
+    }
+
+    .modal-btn-row {
+      display: flex;
+      gap: 10px;
+      margin-top: 6px;
+    }
+
+    .btn-github-deploy {
+      flex: 2;
+      background: var(--color-yellow);
+      color: var(--color-black);
+      font-weight: 800;
+      padding: 12px;
+      border-radius: 8px;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      border: none;
+      cursor: pointer;
+    }
+
+    .btn-github-deploy:hover {
+      background: var(--color-yellow-hover);
+    }
+
+    .btn-modal-close {
+      flex: 1;
+      background: transparent;
+      border: 1px solid rgba(255, 228, 0, 0.4);
+      color: var(--color-text-white);
+      padding: 12px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    /* GitHub Auto-Commit Token Accordion */
+    .github-token-section {
+      background: rgba(255, 228, 0, 0.04);
+      border: 1px dashed rgba(255, 228, 0, 0.25);
+      border-radius: 10px;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .gh-header {
+      font-size: 0.82rem;
+      font-weight: 800;
+      color: var(--color-yellow);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+    }
+
     /* Toast Notification */
     .toast-msg {
       position: fixed;
@@ -189,7 +326,7 @@
       opacity: 0;
       pointer-events: none;
       transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s ease;
-      z-index: 100;
+      z-index: 1001;
       display: flex;
       align-items: center;
       gap: 10px;
@@ -201,55 +338,19 @@
       opacity: 1;
     }
 
-    .events-info-box {
-      background: rgba(255, 228, 0, 0.05);
-      border: 1px solid rgba(255, 228, 0, 0.2);
-      border-radius: 10px;
-      padding: 14px;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    .events-title {
-      font-size: 0.78rem;
-      font-weight: 800;
-      color: var(--color-yellow);
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
-
-    .events-list {
-      list-style: none;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 6px;
-      font-size: 0.74rem;
-      color: var(--color-text-dim);
-    }
-
-    .events-list li strong {
-      color: var(--color-text-white);
-    }
-
     @media (max-width: 480px) {
-      .events-list {
-        grid-template-columns: 1fr;
-      }
-      .nav-links-row {
+      .nav-links-row, .modal-btn-row {
         flex-direction: column;
       }
     }
   </style>
 </head>
 <body>
-  <!-- Ambient background glow elements -->
   <div class="bg-glow bg-glow-top" aria-hidden="true"></div>
   <div class="bg-glow bg-glow-bottom" aria-hidden="true"></div>
   <div class="bg-grid-overlay" aria-hidden="true"></div>
 
   <main class="page-container admin-container">
-    <!-- Header -->
     <header class="brand-header">
       <div class="logo-wrapper">
         <div class="logo-glow"></div>
@@ -262,11 +363,16 @@
       </div>
 
       <h1 class="brand-title" style="font-size: 1.8rem;">PIXEL & LINK MANAGER</h1>
-      <p class="brand-subtext">Directly update Meta Pixel ID, WhatsApp Number & Telegram Links</p>
+      <p class="brand-subtext">Update Meta Pixel ID, WhatsApp Number & Telegram Links</p>
     </header>
 
-    <!-- Admin Form Card -->
     <div class="admin-card">
+      <!-- Environment info badge -->
+      <div class="env-badge-row">
+        <span>Current Environment:</span>
+        <span class="env-tag" id="env-tag-display">⚡ Detecting...</span>
+      </div>
+
       <form id="config-form" novalidate>
         <!-- 1. Meta Pixel ID -->
         <div class="form-group">
@@ -293,7 +399,7 @@
                  class="form-input" 
                  placeholder="e.g. 919876543210 (Country code + number)" 
                  autocomplete="tel">
-          <span class="form-hint">Numbers only with country code (e.g. 919876543210). No "+" or dashes.</span>
+          <span class="form-hint">Numbers only with country code (e.g. 919876543210). No "+" or spaces.</span>
           <div class="preview-box" id="wa-preview-box">Preview: https://wa.me/</div>
         </div>
 
@@ -305,7 +411,7 @@
           <textarea id="whatsapp-message-input" 
                     class="form-textarea" 
                     placeholder="Hello Mahadev, I want to connect with you regarding mentorship and education."></textarea>
-          <span class="form-hint">Text automatically filled in when the visitor taps the WhatsApp button.</span>
+          <span class="form-hint">Default message when user taps WhatsApp button.</span>
         </div>
 
         <!-- 4. Telegram Channel Link -->
@@ -322,24 +428,29 @@
           <div class="preview-box" id="tg-preview-box">Preview: https://t.me/</div>
         </div>
 
-        <!-- Meta Pixel Tracking Info -->
-        <div class="events-info-box">
-          <span class="events-title">⚡ Automated Meta Pixel Events Configured:</span>
-          <ul class="events-list">
-            <li>Page Visit: <strong>PageView</strong></li>
-            <li>WhatsApp Tap: <strong>Contact & Lead</strong></li>
-            <li>Telegram Tap: <strong>Subscribe & ViewContent</strong></li>
-            <li>Video Start: <strong>VideoPlay (Custom)</strong></li>
-          </ul>
+        <!-- Optional GitHub Token for 1-Click Auto-Deploy on Vercel -->
+        <div class="github-token-section">
+          <div class="gh-header" id="gh-toggle-btn">
+            <span>🔑 1-Click Auto-Deploy on Vercel (Optional)</span>
+            <span id="gh-toggle-indicator">+</span>
+          </div>
+          <div id="gh-token-content" style="display: none; flex-direction: column; gap: 8px;">
+            <input type="password" 
+                   id="github-token-input" 
+                   class="form-input" 
+                   placeholder="github_pat_... or ghp_..." 
+                   autocomplete="off">
+            <span class="form-hint">Paste a GitHub Personal Access Token (with repo access). When provided, clicking save commits straight to GitHub and Vercel deploys live automatically in ~10 seconds!</span>
+          </div>
         </div>
 
-        <!-- Submit & Navigation -->
+        <!-- Submit Buttons -->
         <div class="btn-save-wrap">
           <button type="submit" class="btn-submit" id="save-btn">
             <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
               <path d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z"/>
             </svg>
-            <span>UPDATE WEBSITE NOW</span>
+            <span id="save-btn-text">SAVE & UPDATE WEBSITE</span>
           </button>
 
           <div class="nav-links-row">
@@ -357,12 +468,39 @@
       </form>
     </div>
 
-    <!-- Footer -->
     <footer class="brand-footer">
       <div class="footer-divider"></div>
       <p class="footer-copyright">© 2010 - 2026 <strong>MAHADEV</strong> Control Center</p>
     </footer>
   </main>
+
+  <!-- Modal for Vercel/GitHub Deployment -->
+  <div class="deploy-modal-backdrop" id="deploy-modal">
+    <div class="deploy-modal">
+      <div class="modal-title">
+        <span>🚀</span>
+        <span>Update Live on Vercel</span>
+      </div>
+      <p class="modal-body">
+        Your new links & Pixel are ready! The configuration has been <strong>copied to your clipboard</strong>.
+        <br><br>
+        Click the button below to open GitHub, paste into <code style="color:var(--color-yellow)">config.json</code>, and click <strong>Commit changes</strong>. Vercel will instantly redeploy your live site!
+      </p>
+
+      <div class="modal-json-box" id="modal-json-preview"></div>
+
+      <div class="modal-btn-row">
+        <a href="https://github.com/rajuaana00321-stack/babajimarket/edit/main/config.json" 
+           target="_blank" 
+           rel="noopener noreferrer" 
+           class="btn-github-deploy" 
+           id="modal-gh-link">
+          <span>⚡ Open GitHub & Commit</span>
+        </a>
+        <button type="button" class="btn-modal-close" id="modal-close-btn">Done</button>
+      </div>
+    </div>
+  </div>
 
   <!-- Notification Toast -->
   <div class="toast-msg" id="toast-msg">
@@ -371,33 +509,56 @@
   </div>
 
   <script>
-    // Determine API origin (works seamlessly on http://localhost:3000/ or directly opening file:///)
-    const API_ORIGIN = (window.location.protocol === 'file:') ? 'http://localhost:3000' : '';
+    const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+    const envTag = document.getElementById('env-tag-display');
+    envTag.textContent = isLocal ? '💻 Local Dev Server' : '☁️ Live Vercel Deployment';
 
-    // Elements
     const pixelInput = document.getElementById('pixel-id-input');
     const pixelBadge = document.getElementById('pixel-status-badge');
     const waPhoneInput = document.getElementById('whatsapp-phone-input');
     const waMsgInput = document.getElementById('whatsapp-message-input');
     const tgUrlInput = document.getElementById('telegram-url-input');
+    const ghTokenInput = document.getElementById('github-token-input');
     
     const waPreviewBox = document.getElementById('wa-preview-box');
     const tgPreviewBox = document.getElementById('tg-preview-box');
     const testWaBtn = document.getElementById('test-wa-btn');
     const testTgBtn = document.getElementById('test-tg-btn');
-    const previewHomeBtn = document.getElementById('preview-home-btn');
     const form = document.getElementById('config-form');
     const toast = document.getElementById('toast-msg');
     const toastText = document.getElementById('toast-text');
 
-    if (window.location.protocol === 'file:') {
-      previewHomeBtn.href = 'index.html';
+    const deployModal = document.getElementById('deploy-modal');
+    const modalJsonPreview = document.getElementById('modal-json-preview');
+    const modalCloseBtn = document.getElementById('modal-close-btn');
+
+    // GitHub token toggle
+    const ghToggle = document.getElementById('gh-toggle-btn');
+    const ghContent = document.getElementById('gh-token-content');
+    const ghIndicator = document.getElementById('gh-toggle-indicator');
+    ghToggle.addEventListener('click', () => {
+      const open = ghContent.style.display === 'flex';
+      ghContent.style.display = open ? 'none' : 'flex';
+      ghIndicator.textContent = open ? '+' : '−';
+    });
+
+    // Stored GH token
+    const savedGhToken = localStorage.getItem('mahadev_gh_token');
+    if (savedGhToken) {
+      ghTokenInput.value = savedGhToken;
+      ghContent.style.display = 'flex';
+      ghIndicator.textContent = '−';
     }
 
-    // Load initial config from API or config.json
+    modalCloseBtn.addEventListener('click', () => {
+      deployModal.classList.remove('active');
+    });
+
+    // Load initial config
     async function loadConfig() {
+      // 1. Try /api/config
       try {
-        const res = await fetch(API_ORIGIN + '/api/config', { cache: 'no-store' });
+        const res = await fetch('/api/config', { cache: 'no-store' });
         if (res.ok) {
           const cfg = await res.json();
           applyConfigToForm(cfg);
@@ -405,7 +566,7 @@
         }
       } catch (e) {}
 
-      // Fallback: fetch config.json
+      // 2. Try config.json
       try {
         const res2 = await fetch('config.json', { cache: 'no-store' });
         if (res2.ok) {
@@ -425,7 +586,6 @@
     }
 
     function updatePreviews() {
-      // Pixel status
       const pixelVal = pixelInput.value.trim();
       if (pixelVal && /^[0-9]+$/.test(pixelVal)) {
         pixelBadge.textContent = 'Active (ID: ' + pixelVal + ')';
@@ -438,7 +598,6 @@
         pixelBadge.className = 'pixel-status inactive';
       }
 
-      // WhatsApp link preview
       const cleanPhone = waPhoneInput.value.replace(/[^0-9]/g, '');
       const msg = encodeURIComponent(waMsgInput.value.trim());
       let waLink = 'https://wa.me/';
@@ -450,7 +609,6 @@
       waPreviewBox.textContent = 'Preview: ' + waLink;
       testWaBtn.href = waLink;
 
-      // Telegram link preview
       let tgLink = tgUrlInput.value.trim();
       if (tgLink && !tgLink.startsWith('http://') && !tgLink.startsWith('https://')) {
         if (tgLink.startsWith('@')) tgLink = tgLink.substring(1);
@@ -460,16 +618,15 @@
       testTgBtn.href = tgLink || 'https://t.me/';
     }
 
-    // Input listeners
     pixelInput.addEventListener('input', updatePreviews);
     waPhoneInput.addEventListener('input', updatePreviews);
     waMsgInput.addEventListener('input', updatePreviews);
     tgUrlInput.addEventListener('input', updatePreviews);
 
-    // Save form & directly update site files
+    // Save & Update
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
-      
+
       let tgLink = tgUrlInput.value.trim();
       if (tgLink && !tgLink.startsWith('http://') && !tgLink.startsWith('https://')) {
         if (tgLink.startsWith('@')) tgLink = tgLink.substring(1);
@@ -483,24 +640,88 @@
         telegramUrl: tgLink || 'https://t.me/'
       };
 
-      try {
-        const res = await fetch(API_ORIGIN + '/api/config', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(payload)
-        });
+      const jsonString = JSON.stringify(payload, null, 2);
 
-        const data = await res.json();
-        if (res.ok && data.success) {
-          showToast('✅ Updated directly on disk! All files and links updated.');
-        } else {
-          showToast('⚠️ Update error: ' + (data.error || 'Server error'));
-        }
-      } catch (err) {
-        showToast('⚠️ Could not connect to dev server. Run "node serve.js" to save updates.');
+      // Save token to localStorage if entered
+      const ghToken = ghTokenInput.value.trim();
+      if (ghToken) {
+        localStorage.setItem('mahadev_gh_token', ghToken);
       }
+
+      // If running locally on node serve.js
+      if (isLocal) {
+        try {
+          const res = await fetch('/api/config', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+          const data = await res.json();
+          if (res.ok && data.success) {
+            showToast('✅ Saved directly to local files!');
+            return;
+          }
+        } catch (err) {}
+      }
+
+      // If on Vercel with GitHub Token entered or sent
+      if (ghToken) {
+        showToast('⏳ Committing update to GitHub...');
+        try {
+          // Direct GitHub REST API commit from browser
+          const repo = 'rajuaana00321-stack/babajimarket';
+          const fileUrl = `https://api.github.com/repos/${repo}/contents/config.json`;
+
+          // 1. Get SHA
+          const getRes = await fetch(fileUrl, {
+            headers: {
+              'Authorization': `Bearer ${ghToken}`,
+              'Accept': 'application/vnd.github.v3+json'
+            }
+          });
+
+          let sha = undefined;
+          if (getRes.ok) {
+            const fileInfo = await getRes.json();
+            sha = fileInfo.sha;
+          }
+
+          // 2. Commit update
+          const commitRes = await fetch(fileUrl, {
+            method: 'PUT',
+            headers: {
+              'Authorization': `Bearer ${ghToken}`,
+              'Content-Type': 'application/json',
+              'Accept': 'application/vnd.github.v3+json'
+            },
+            body: JSON.stringify({
+              message: 'Update links & Meta Pixel from /pixcel',
+              content: btoa(unescape(encodeURIComponent(jsonString))),
+              sha: sha,
+              branch: 'main'
+            })
+          });
+
+          if (commitRes.ok) {
+            showToast('🚀 Pushed to GitHub! Vercel is auto-deploying in ~10s.');
+            return;
+          } else {
+            const errJson = await commitRes.json();
+            console.warn('GitHub direct error:', errJson);
+          }
+        } catch (ghErr) {
+          console.warn('GH commit error:', ghErr);
+        }
+      }
+
+      // Fallback on Vercel: Copy JSON & open GitHub Commit Modal
+      try {
+        await navigator.clipboard.writeText(jsonString);
+      } catch (clipErr) {}
+
+      modalJsonPreview.textContent = jsonString;
+      deployModal.classList.add('active');
+      showToast('📋 Config copied! Commit on GitHub to auto-deploy.');
     });
 
     function showToast(message) {
@@ -508,10 +729,9 @@
       toast.classList.add('show');
       setTimeout(() => {
         toast.classList.remove('show');
-      }, 4000);
+      }, 4500);
     }
 
-    // Initialize
     loadConfig();
   </script>
 </body>

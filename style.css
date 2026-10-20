@@ -1,0 +1,686 @@
+/* ==========================================================================
+   MAHADEV LUXURY BLACK & #ffe400 STYLESHEET
+   ========================================================================== */
+
+:root {
+  --color-black: #000000;
+  --color-bg-base: #060606;
+  --color-bg-surface: #0e0e0e;
+  --color-bg-card: #141414;
+  --color-bg-card-hover: #1c1c1c;
+  
+  /* Requested Signature Brand Color */
+  --color-yellow: #ffe400;
+  --color-yellow-hover: #ffec33;
+  --color-yellow-glow: rgba(255, 228, 0, 0.35);
+  --color-yellow-glow-subtle: rgba(255, 228, 0, 0.12);
+  --color-yellow-border: rgba(255, 228, 0, 0.3);
+  --color-yellow-border-bright: rgba(255, 228, 0, 0.85);
+
+  --color-text-white: #ffffff;
+  --color-text-dim: #b0b0b0;
+  --color-text-muted: #757575;
+
+  --font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  
+  --transition-fast: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-smooth: 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  --border-radius-sm: 8px;
+  --border-radius-md: 14px;
+  --border-radius-lg: 20px;
+  --border-radius-pill: 9999px;
+}
+
+/* Reset & Base Styles */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+  background-color: var(--color-black);
+}
+
+body {
+  font-family: var(--font-family);
+  background-color: var(--color-bg-base);
+  color: var(--color-text-white);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow-x: hidden;
+  position: relative;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Background Ambient Lighting */
+.bg-glow {
+  position: fixed;
+  border-radius: 50%;
+  filter: blur(120px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.bg-glow-top {
+  top: -120px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 500px;
+  height: 380px;
+  background: radial-gradient(circle, rgba(255, 228, 0, 0.18) 0%, rgba(0, 0, 0, 0) 70%);
+}
+
+.bg-glow-bottom {
+  bottom: -150px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 600px;
+  height: 400px;
+  background: radial-gradient(circle, rgba(255, 228, 0, 0.1) 0%, rgba(0, 0, 0, 0) 70%);
+}
+
+.bg-grid-overlay {
+  position: fixed;
+  inset: 0;
+  background-image: 
+    linear-gradient(to right, rgba(255, 228, 0, 0.03) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 228, 0, 0.03) 1px, transparent 1px);
+  background-size: 40px 40px;
+  pointer-events: none;
+  z-index: 0;
+  mask-image: radial-gradient(circle at center, black 40%, transparent 85%);
+  -webkit-mask-image: radial-gradient(circle at center, black 40%, transparent 85%);
+}
+
+/* Layout Container */
+.page-container {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 540px;
+  padding: 32px 20px 48px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 28px;
+}
+
+/* ==========================================================================
+   Header & Logo Section
+   ========================================================================== */
+.brand-header {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.logo-wrapper {
+  position: relative;
+  margin-bottom: 18px;
+}
+
+.logo-glow {
+  position: absolute;
+  inset: -8px;
+  background: var(--color-yellow);
+  border-radius: 28px;
+  filter: blur(20px);
+  opacity: 0.35;
+  animation: pulse-glow 3s ease-in-out infinite alternate;
+}
+
+@keyframes pulse-glow {
+  0% {
+    opacity: 0.25;
+    transform: scale(0.96);
+  }
+  100% {
+    opacity: 0.55;
+    transform: scale(1.04);
+  }
+}
+
+.brand-logo {
+  position: relative;
+  display: block;
+  width: 124px;
+  height: 124px;
+  object-fit: cover;
+  border-radius: 24px;
+  border: 2px solid var(--color-yellow);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.8), 0 0 20px rgba(255, 228, 0, 0.3);
+  transition: transform var(--transition-smooth), box-shadow var(--transition-smooth);
+}
+
+.brand-logo:hover {
+  transform: translateY(-3px) scale(1.03);
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.9), 0 0 30px rgba(255, 228, 0, 0.5);
+}
+
+.brand-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 228, 0, 0.1);
+  border: 1px solid rgba(255, 228, 0, 0.35);
+  color: var(--color-yellow);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 6px 14px;
+  border-radius: var(--border-radius-pill);
+  margin-bottom: 14px;
+  backdrop-filter: blur(8px);
+}
+
+.badge-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--color-yellow);
+  box-shadow: 0 0 8px var(--color-yellow);
+  animation: blink-dot 1.8s ease-in-out infinite;
+}
+
+@keyframes blink-dot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.85); }
+}
+
+.brand-title {
+  font-size: 2.25rem;
+  font-weight: 900;
+  letter-spacing: 0.05em;
+  color: var(--color-text-white);
+  line-height: 1.15;
+  margin-bottom: 6px;
+  text-transform: uppercase;
+}
+
+.brand-title::after {
+  content: "";
+  display: block;
+  width: 48px;
+  height: 3px;
+  background: var(--color-yellow);
+  margin: 10px auto 12px;
+  border-radius: 2px;
+  box-shadow: 0 0 10px var(--color-yellow);
+}
+
+.brand-tagline {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--color-yellow);
+  letter-spacing: 0.04em;
+  margin-bottom: 4px;
+}
+
+.brand-subtext {
+  font-size: 0.88rem;
+  font-weight: 500;
+  color: var(--color-text-dim);
+}
+
+/* ==========================================================================
+   Action CTA Buttons Section (WhatsApp & Telegram)
+   ========================================================================== */
+.cta-section {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.action-btn {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 16px 20px;
+  border-radius: var(--border-radius-md);
+  text-decoration: none;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  user-select: none;
+  transition: transform var(--transition-smooth), box-shadow var(--transition-smooth), border-color var(--transition-fast), background-color var(--transition-fast);
+}
+
+.action-btn:focus-visible {
+  outline: 3px solid var(--color-yellow);
+  outline-offset: 3px;
+}
+
+/* Button 1: WhatsApp (Primary High-Impact Button) */
+.btn-whatsapp {
+  background: var(--color-yellow);
+  color: var(--color-black);
+  border: 2px solid var(--color-yellow);
+  box-shadow: 0 6px 24px rgba(255, 228, 0, 0.3), 0 2px 6px rgba(0, 0, 0, 0.5);
+}
+
+.btn-whatsapp:hover {
+  background: var(--color-yellow-hover);
+  transform: translateY(-3px) scale(1.015);
+  box-shadow: 0 10px 30px rgba(255, 228, 0, 0.5), 0 4px 10px rgba(0, 0, 0, 0.6);
+}
+
+.btn-whatsapp:active {
+  transform: translateY(-1px) scale(0.995);
+}
+
+.btn-whatsapp .btn-icon-wrapper {
+  background: var(--color-black);
+  color: var(--color-yellow);
+}
+
+.btn-whatsapp .btn-label {
+  color: var(--color-black);
+}
+
+.btn-whatsapp .btn-subtext {
+  color: rgba(0, 0, 0, 0.75);
+}
+
+.btn-whatsapp .btn-arrow {
+  color: var(--color-black);
+}
+
+/* Button 2: Telegram Channel (Luxury Obsidian & Yellow Accent) */
+.btn-telegram {
+  background: var(--color-bg-card);
+  color: var(--color-text-white);
+  border: 2px solid var(--color-yellow);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.7), 0 0 15px rgba(255, 228, 0, 0.15);
+}
+
+.btn-telegram:hover {
+  background: #191919;
+  border-color: var(--color-yellow);
+  transform: translateY(-3px) scale(1.015);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.8), 0 0 25px rgba(255, 228, 0, 0.35);
+}
+
+.btn-telegram:active {
+  transform: translateY(-1px) scale(0.995);
+}
+
+.btn-telegram .btn-icon-wrapper {
+  background: rgba(255, 228, 0, 0.15);
+  color: var(--color-yellow);
+  border: 1px solid rgba(255, 228, 0, 0.4);
+}
+
+.btn-telegram .btn-label {
+  color: var(--color-yellow);
+}
+
+.btn-telegram .btn-subtext {
+  color: var(--color-text-dim);
+}
+
+.btn-telegram .btn-arrow {
+  color: var(--color-yellow);
+}
+
+/* Button Shared Structure */
+.btn-icon-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  flex-shrink: 0;
+  transition: transform var(--transition-fast);
+}
+
+.action-btn:hover .btn-icon-wrapper {
+  transform: scale(1.1);
+}
+
+.btn-content {
+  display: flex;
+  flex-direction: column;
+  margin-left: 14px;
+  flex-grow: 1;
+  text-align: left;
+}
+
+.btn-label {
+  font-size: 0.96rem;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  line-height: 1.25;
+}
+
+.btn-subtext {
+  font-size: 0.78rem;
+  font-weight: 600;
+  margin-top: 3px;
+  line-height: 1.2;
+}
+
+.btn-arrow {
+  margin-left: 8px;
+  flex-shrink: 0;
+  transition: transform var(--transition-fast);
+}
+
+.action-btn:hover .btn-arrow {
+  transform: translateX(4px);
+}
+
+/* Ripple Click Effect */
+.ripple {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.35);
+  transform: scale(0);
+  animation: ripple-animation 0.6s linear;
+  pointer-events: none;
+}
+
+@keyframes ripple-animation {
+  to {
+    transform: scale(4);
+    opacity: 0;
+  }
+}
+
+/* ==========================================================================
+   Video Showcase Section
+   ========================================================================== */
+.video-section {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 8px;
+}
+
+.section-title-wrap {
+  text-align: center;
+  margin-bottom: 14px;
+}
+
+.section-badge {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  color: var(--color-yellow);
+  margin-bottom: 4px;
+}
+
+.section-heading {
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: var(--color-text-white);
+  letter-spacing: 0.02em;
+}
+
+/* Video Card Container */
+.video-card-container {
+  width: 100%;
+  position: relative;
+  background: var(--color-bg-card);
+  border-radius: var(--border-radius-lg);
+  border: 2px solid var(--color-yellow);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.9), 0 0 30px rgba(255, 228, 0, 0.2);
+  overflow: hidden;
+  transition: box-shadow var(--transition-smooth), border-color var(--transition-smooth);
+}
+
+.video-card-container:hover {
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.95), 0 0 40px rgba(255, 228, 0, 0.35);
+}
+
+/* Floating Audio Toggle Badge */
+.video-audio-badge {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(0, 0, 0, 0.85);
+  border: 1.5px solid var(--color-yellow);
+  color: var(--color-yellow);
+  font-family: var(--font-family);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  padding: 7px 13px;
+  border-radius: var(--border-radius-pill);
+  cursor: pointer;
+  backdrop-filter: blur(8px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6), 0 0 10px rgba(255, 228, 0, 0.25);
+  transition: transform var(--transition-fast), background var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.video-audio-badge:hover {
+  transform: scale(1.06);
+  background: var(--color-yellow);
+  color: var(--color-black);
+  box-shadow: 0 6px 16px rgba(255, 228, 0, 0.4);
+}
+
+/* Video Player Wrapper */
+.video-wrapper {
+  position: relative;
+  width: 100%;
+  background: var(--color-black);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.video-wrapper video {
+  width: 100%;
+  height: auto;
+  max-height: 520px;
+  display: block;
+  object-fit: contain;
+  background: var(--color-black);
+}
+
+/* Center Play/Pause Overlay */
+.video-center-btn {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.9);
+  width: 68px;
+  height: 68px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.75);
+  border: 2px solid var(--color-yellow);
+  color: var(--color-yellow);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  backdrop-filter: blur(6px);
+  box-shadow: 0 0 25px rgba(255, 228, 0, 0.4);
+  transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.video-wrapper:hover .video-center-btn,
+.video-wrapper.is-paused .video-center-btn {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.video-center-btn:hover {
+  background: var(--color-yellow);
+  color: var(--color-black);
+  transform: translate(-50%, -50%) scale(1.1);
+  box-shadow: 0 0 35px var(--color-yellow);
+}
+
+/* Video Controls Bar */
+.video-custom-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 16px;
+  background: #0a0a0a;
+  border-top: 1px solid rgba(255, 228, 0, 0.2);
+}
+
+.ctrl-btn {
+  background: transparent;
+  border: none;
+  color: var(--color-yellow);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background var(--transition-fast), transform var(--transition-fast);
+}
+
+.ctrl-btn:hover {
+  background: rgba(255, 228, 0, 0.15);
+  transform: scale(1.1);
+}
+
+.ctrl-btn:active {
+  transform: scale(0.95);
+}
+
+.video-timeline {
+  flex-grow: 1;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.timeline-bar {
+  position: relative;
+  width: 100%;
+  height: 5px;
+  background: #2a2a2a;
+  border-radius: 4px;
+  overflow: hidden;
+  transition: height 0.15s ease;
+}
+
+.video-timeline:hover .timeline-bar {
+  height: 8px;
+}
+
+.timeline-progress {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 0%;
+  background: var(--color-yellow);
+  box-shadow: 0 0 10px var(--color-yellow);
+  border-radius: 4px;
+  transition: width 0.05s linear;
+}
+
+.video-time {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--color-text-dim);
+  font-variant-numeric: tabular-nums;
+  min-width: 36px;
+  text-align: right;
+}
+
+/* ==========================================================================
+   Footer
+   ========================================================================== */
+.brand-footer {
+  width: 100%;
+  text-align: center;
+  padding-top: 16px;
+  margin-top: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.footer-divider {
+  width: 80px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--color-yellow), transparent);
+  margin-bottom: 12px;
+}
+
+.footer-copyright {
+  font-size: 0.82rem;
+  color: var(--color-text-dim);
+  letter-spacing: 0.02em;
+}
+
+.footer-copyright strong {
+  color: var(--color-yellow);
+}
+
+.footer-note {
+  font-size: 0.74rem;
+  color: var(--color-text-muted);
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+/* ==========================================================================
+   Responsive Adaptations
+   ========================================================================== */
+@media (max-width: 480px) {
+  .page-container {
+    padding: 24px 16px 40px;
+    gap: 24px;
+  }
+
+  .brand-logo {
+    width: 108px;
+    height: 108px;
+    border-radius: 20px;
+  }
+
+  .brand-title {
+    font-size: 1.85rem;
+  }
+
+  .action-btn {
+    padding: 14px 16px;
+  }
+
+  .btn-icon-wrapper {
+    width: 42px;
+    height: 42px;
+  }
+
+  .btn-label {
+    font-size: 0.88rem;
+  }
+
+  .btn-subtext {
+    font-size: 0.72rem;
+  }
+}

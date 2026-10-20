@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MAHADEV - Pixel & Links Manager (/pixcel)</title>
+  
+  <link rel="icon" type="image/png" href="assets/logo.png">
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* Admin/Config Panel Specific Styles */
+    .admin-container {
+      max-width: 620px;
+    }
+
+    .admin-card {
+      width: 100%;
+      background: var(--color-bg-card);
+      border: 2px solid var(--color-yellow);
+      border-radius: var(--border-radius-lg);
+      padding: 28px 24px;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.9), 0 0 25px rgba(255, 228, 0, 0.15);
+      display: flex;
+      flex-direction: column;
+      gap: 22px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .form-label {
+      font-size: 0.86rem;
+      font-weight: 800;
+      color: var(--color-yellow);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .pixel-status {
+      font-size: 0.72rem;
+      padding: 3px 8px;
+      border-radius: var(--border-radius-pill);
+      font-weight: 700;
+      letter-spacing: 0.02em;
+    }
+
+    .pixel-status.active {
+      background: rgba(46, 213, 115, 0.18);
+      color: #2ed573;
+      border: 1px solid rgba(46, 213, 115, 0.4);
+    }
+
+    .pixel-status.inactive {
+      background: rgba(255, 71, 87, 0.18);
+      color: #ff6b81;
+      border: 1px solid rgba(255, 71, 87, 0.4);
+    }
+
+    .form-input, .form-textarea {
+      width: 100%;
+      background: #090909;
+      border: 1.5px solid rgba(255, 228, 0, 0.3);
+      color: #ffffff;
+      font-family: var(--font-family);
+      font-size: 0.95rem;
+      padding: 12px 14px;
+      border-radius: var(--border-radius-sm);
+      transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+    }
+
+    .form-input:focus, .form-textarea:focus {
+      outline: none;
+      border-color: var(--color-yellow);
+      box-shadow: 0 0 12px rgba(255, 228, 0, 0.3);
+    }
+
+    .form-textarea {
+      min-height: 80px;
+      resize: vertical;
+    }
+
+    .form-hint {
+      font-size: 0.76rem;
+      color: var(--color-text-dim);
+      line-height: 1.35;
+    }
+
+    .preview-box {
+      background: #050505;
+      border: 1px dashed rgba(255, 228, 0, 0.35);
+      border-radius: 8px;
+      padding: 10px 12px;
+      font-size: 0.75rem;
+      color: var(--color-yellow);
+      word-break: break-all;
+      font-family: monospace;
+    }
+
+    .btn-save-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 10px;
+    }
+
+    .btn-submit {
+      width: 100%;
+      background: var(--color-yellow);
+      color: var(--color-black);
+      border: none;
+      font-family: var(--font-family);
+      font-size: 1rem;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      padding: 16px;
+      border-radius: var(--border-radius-md);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      box-shadow: 0 6px 20px rgba(255, 228, 0, 0.35);
+      transition: transform var(--transition-smooth), background var(--transition-fast), box-shadow var(--transition-fast);
+    }
+
+    .btn-submit:hover {
+      background: var(--color-yellow-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 10px 28px rgba(255, 228, 0, 0.5);
+    }
+
+    .btn-submit:active {
+      transform: scale(0.98);
+    }
+
+    .nav-links-row {
+      display: flex;
+      gap: 10px;
+      width: 100%;
+    }
+
+    .btn-secondary {
+      flex: 1;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: transparent;
+      border: 1.5px solid var(--color-yellow);
+      color: var(--color-yellow);
+      padding: 12px;
+      border-radius: var(--border-radius-md);
+      font-size: 0.85rem;
+      font-weight: 700;
+      text-decoration: none;
+      cursor: pointer;
+      transition: background var(--transition-fast), color var(--transition-fast);
+    }
+
+    .btn-secondary:hover {
+      background: var(--color-yellow);
+      color: var(--color-black);
+    }
+
+    /* Toast Notification */
+    .toast-msg {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: var(--color-yellow);
+      color: var(--color-black);
+      padding: 14px 28px;
+      border-radius: var(--border-radius-pill);
+      font-size: 0.92rem;
+      font-weight: 800;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.9), 0 0 25px rgba(255, 228, 0, 0.7);
+      opacity: 0;
+      pointer-events: none;
+      transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s ease;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-align: center;
+    }
+
+    .toast-msg.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+
+    .events-info-box {
+      background: rgba(255, 228, 0, 0.05);
+      border: 1px solid rgba(255, 228, 0, 0.2);
+      border-radius: 10px;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .events-title {
+      font-size: 0.78rem;
+      font-weight: 800;
+      color: var(--color-yellow);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .events-list {
+      list-style: none;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+      font-size: 0.74rem;
+      color: var(--color-text-dim);
+    }
+
+    .events-list li strong {
+      color: var(--color-text-white);
+    }
+
+    @media (max-width: 480px) {
+      .events-list {
+        grid-template-columns: 1fr;
+      }
+      .nav-links-row {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Ambient background glow elements -->
+  <div class="bg-glow bg-glow-top" aria-hidden="true"></div>
+  <div class="bg-glow bg-glow-bottom" aria-hidden="true"></div>
+  <div class="bg-grid-overlay" aria-hidden="true"></div>
+
+  <main class="page-container admin-container">
+    <!-- Header -->
+    <header class="brand-header">
+      <div class="logo-wrapper">
+        <div class="logo-glow"></div>
+        <img src="assets/logo.png" alt="MAHADEV Brand Logo" class="brand-logo" width="100" height="100" style="width: 100px; height: 100px;">
+      </div>
+
+      <div class="brand-badge">
+        <span class="badge-dot"></span>
+        <span class="badge-text">Settings & Meta Pixels (/pixcel)</span>
+      </div>
+
+      <h1 class="brand-title" style="font-size: 1.8rem;">PIXEL & LINK MANAGER</h1>
+      <p class="brand-subtext">Directly update Meta Pixel ID, WhatsApp Number & Telegram Links</p>
+    </header>
+
+    <!-- Admin Form Card -->
+    <div class="admin-card">
+      <form id="config-form" novalidate>
+        <!-- 1. Meta Pixel ID -->
+        <div class="form-group">
+          <label class="form-label" for="pixel-id-input">
+            <span>Meta Pixel ID (Facebook Pixel)</span>
+            <span class="pixel-status inactive" id="pixel-status-badge">Not Connected</span>
+          </label>
+          <input type="text" 
+                 id="pixel-id-input" 
+                 class="form-input" 
+                 placeholder="e.g. 123456789012345" 
+                 autocomplete="off" 
+                 spellcheck="false">
+          <span class="form-hint">Enter your numeric Meta Pixel ID from Meta Events Manager.</span>
+        </div>
+
+        <!-- 2. WhatsApp Phone Number -->
+        <div class="form-group">
+          <label class="form-label" for="whatsapp-phone-input">
+            <span>WhatsApp Contact Number</span>
+          </label>
+          <input type="tel" 
+                 id="whatsapp-phone-input" 
+                 class="form-input" 
+                 placeholder="e.g. 919876543210 (Country code + number)" 
+                 autocomplete="tel">
+          <span class="form-hint">Numbers only with country code (e.g. 919876543210). No "+" or dashes.</span>
+          <div class="preview-box" id="wa-preview-box">Preview: https://wa.me/</div>
+        </div>
+
+        <!-- 3. WhatsApp Pre-filled Message -->
+        <div class="form-group">
+          <label class="form-label" for="whatsapp-message-input">
+            <span>WhatsApp Pre-filled Message</span>
+          </label>
+          <textarea id="whatsapp-message-input" 
+                    class="form-textarea" 
+                    placeholder="Hello Mahadev, I want to connect with you regarding mentorship and education."></textarea>
+          <span class="form-hint">Text automatically filled in when the visitor taps the WhatsApp button.</span>
+        </div>
+
+        <!-- 4. Telegram Channel Link -->
+        <div class="form-group">
+          <label class="form-label" for="telegram-url-input">
+            <span>Telegram Channel Link / Username</span>
+          </label>
+          <input type="text" 
+                 id="telegram-url-input" 
+                 class="form-input" 
+                 placeholder="https://t.me/YourChannelName" 
+                 autocomplete="off">
+          <span class="form-hint">Full link (https://t.me/...) or handle (@YourChannelName).</span>
+          <div class="preview-box" id="tg-preview-box">Preview: https://t.me/</div>
+        </div>
+
+        <!-- Meta Pixel Tracking Info -->
+        <div class="events-info-box">
+          <span class="events-title">⚡ Automated Meta Pixel Events Configured:</span>
+          <ul class="events-list">
+            <li>Page Visit: <strong>PageView</strong></li>
+            <li>WhatsApp Tap: <strong>Contact & Lead</strong></li>
+            <li>Telegram Tap: <strong>Subscribe & ViewContent</strong></li>
+            <li>Video Start: <strong>VideoPlay (Custom)</strong></li>
+          </ul>
+        </div>
+
+        <!-- Submit & Navigation -->
+        <div class="btn-save-wrap">
+          <button type="submit" class="btn-submit" id="save-btn">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+              <path d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z"/>
+            </svg>
+            <span>UPDATE WEBSITE NOW</span>
+          </button>
+
+          <div class="nav-links-row">
+            <a href="/" class="btn-secondary" id="preview-home-btn">
+              👁️ View Landing Page
+            </a>
+            <a href="https://wa.me/" target="_blank" rel="noopener noreferrer" class="btn-secondary" id="test-wa-btn">
+              💬 Test WhatsApp
+            </a>
+            <a href="https://t.me/" target="_blank" rel="noopener noreferrer" class="btn-secondary" id="test-tg-btn">
+              ✈️ Test Telegram
+            </a>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <!-- Footer -->
+    <footer class="brand-footer">
+      <div class="footer-divider"></div>
+      <p class="footer-copyright">© 2010 - 2026 <strong>MAHADEV</strong> Control Center</p>
+    </footer>
+  </main>
+
+  <!-- Notification Toast -->
+  <div class="toast-msg" id="toast-msg">
+    <span>✅</span>
+    <span id="toast-text">Updated successfully!</span>
+  </div>
+
+  <script>
+    // Determine API origin (works seamlessly on http://localhost:3000/ or directly opening file:///)
+    const API_ORIGIN = (window.location.protocol === 'file:') ? 'http://localhost:3000' : '';
+
+    // Elements
+    const pixelInput = document.getElementById('pixel-id-input');
+    const pixelBadge = document.getElementById('pixel-status-badge');
+    const waPhoneInput = document.getElementById('whatsapp-phone-input');
+    const waMsgInput = document.getElementById('whatsapp-message-input');
+    const tgUrlInput = document.getElementById('telegram-url-input');
+    
+    const waPreviewBox = document.getElementById('wa-preview-box');
+    const tgPreviewBox = document.getElementById('tg-preview-box');
+    const testWaBtn = document.getElementById('test-wa-btn');
+    const testTgBtn = document.getElementById('test-tg-btn');
+    const previewHomeBtn = document.getElementById('preview-home-btn');
+    const form = document.getElementById('config-form');
+    const toast = document.getElementById('toast-msg');
+    const toastText = document.getElementById('toast-text');
+
+    if (window.location.protocol === 'file:') {
+      previewHomeBtn.href = 'index.html';
+    }
+
+    // Load initial config from API or config.json
+    async function loadConfig() {
+      try {
+        const res = await fetch(API_ORIGIN + '/api/config', { cache: 'no-store' });
+        if (res.ok) {
+          const cfg = await res.json();
+          applyConfigToForm(cfg);
+          return;
+        }
+      } catch (e) {}
+
+      // Fallback: fetch config.json
+      try {
+        const res2 = await fetch('config.json', { cache: 'no-store' });
+        if (res2.ok) {
+          const cfg2 = await res2.json();
+          applyConfigToForm(cfg2);
+        }
+      } catch (err) {}
+    }
+
+    function applyConfigToForm(cfg) {
+      if (!cfg) return;
+      pixelInput.value = cfg.metaPixelId || '';
+      waPhoneInput.value = cfg.whatsappPhone || '';
+      waMsgInput.value = cfg.whatsappMessage || 'Hello Mahadev, I want to connect with you regarding mentorship and education.';
+      tgUrlInput.value = cfg.telegramUrl || 'https://t.me/';
+      updatePreviews();
+    }
+
+    function updatePreviews() {
+      // Pixel status
+      const pixelVal = pixelInput.value.trim();
+      if (pixelVal && /^[0-9]+$/.test(pixelVal)) {
+        pixelBadge.textContent = 'Active (ID: ' + pixelVal + ')';
+        pixelBadge.className = 'pixel-status active';
+      } else if (pixelVal) {
+        pixelBadge.textContent = 'ID Entered';
+        pixelBadge.className = 'pixel-status active';
+      } else {
+        pixelBadge.textContent = 'Not Connected';
+        pixelBadge.className = 'pixel-status inactive';
+      }
+
+      // WhatsApp link preview
+      const cleanPhone = waPhoneInput.value.replace(/[^0-9]/g, '');
+      const msg = encodeURIComponent(waMsgInput.value.trim());
+      let waLink = 'https://wa.me/';
+      if (cleanPhone) {
+        waLink = `https://wa.me/${cleanPhone}?text=${msg}`;
+      } else if (msg) {
+        waLink = `https://wa.me/?text=${msg}`;
+      }
+      waPreviewBox.textContent = 'Preview: ' + waLink;
+      testWaBtn.href = waLink;
+
+      // Telegram link preview
+      let tgLink = tgUrlInput.value.trim();
+      if (tgLink && !tgLink.startsWith('http://') && !tgLink.startsWith('https://')) {
+        if (tgLink.startsWith('@')) tgLink = tgLink.substring(1);
+        tgLink = 'https://t.me/' + tgLink;
+      }
+      tgPreviewBox.textContent = 'Preview: ' + (tgLink || 'https://t.me/');
+      testTgBtn.href = tgLink || 'https://t.me/';
+    }
+
+    // Input listeners
+    pixelInput.addEventListener('input', updatePreviews);
+    waPhoneInput.addEventListener('input', updatePreviews);
+    waMsgInput.addEventListener('input', updatePreviews);
+    tgUrlInput.addEventListener('input', updatePreviews);
+
+    // Save form & directly update site files
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      let tgLink = tgUrlInput.value.trim();
+      if (tgLink && !tgLink.startsWith('http://') && !tgLink.startsWith('https://')) {
+        if (tgLink.startsWith('@')) tgLink = tgLink.substring(1);
+        tgLink = 'https://t.me/' + tgLink;
+      }
+
+      const payload = {
+        metaPixelId: pixelInput.value.trim(),
+        whatsappPhone: waPhoneInput.value.replace(/[^0-9]/g, '').trim(),
+        whatsappMessage: waMsgInput.value.trim(),
+        telegramUrl: tgLink || 'https://t.me/'
+      };
+
+      try {
+        const res = await fetch(API_ORIGIN + '/api/config', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(payload)
+        });
+
+        const data = await res.json();
+        if (res.ok && data.success) {
+          showToast('✅ Updated directly on disk! All files and links updated.');
+        } else {
+          showToast('⚠️ Update error: ' + (data.error || 'Server error'));
+        }
+      } catch (err) {
+        showToast('⚠️ Could not connect to dev server. Run "node serve.js" to save updates.');
+      }
+    });
+
+    function showToast(message) {
+      toastText.textContent = message;
+      toast.classList.add('show');
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 4000);
+    }
+
+    // Initialize
+    loadConfig();
+  </script>
+</body>
+</html>

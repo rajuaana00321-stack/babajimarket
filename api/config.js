@@ -24,10 +24,10 @@ module.exports = async (req, res) => {
 
     // Fallback to environment variables or defaults
     return res.status(200).json({
-      metaPixelId: process.env.META_PIXEL_ID || "",
-      whatsappPhone: process.env.WHATSAPP_PHONE || "",
-      whatsappMessage: process.env.WHATSAPP_MESSAGE || "Hello Mahadev, I want to connect with you regarding mentorship and education.",
-      telegramUrl: process.env.TELEGRAM_URL || "https://t.me/"
+      metaPixelId: process.env.META_PIXEL_ID || "3339040462957606",
+      whatsappPhone: process.env.WHATSAPP_PHONE || "919376412262",
+      whatsappMessage: process.env.WHATSAPP_MESSAGE || "Hello Mahadev, I want mentorship",
+      telegramUrl: process.env.TELEGRAM_URL || "https://t.me/Mahadevbetsbook"
     });
   }
 

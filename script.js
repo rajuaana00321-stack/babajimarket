@@ -5,11 +5,14 @@
 
 // Global configuration state with defaults
 let SITE_CONFIG = {
-  "metaPixelId": "112233445566778",
-  "whatsappPhone": "919876543210",
+  "metaPixelId": "1162560106098659",
+  "whatsappPhone": "919376412262",
   "whatsappMessage": "Hello Mahadev, I want mentorship",
-  "telegramUrl": "https://t.me/MahadevOfficial"
+  "telegramUrl": "https://t.me/Mahadevbetsbook"
 };
+
+// Tracks the currently initialized Pixel ID (matches index.html base code)
+let currentInitializedPixelId = '1162560106098659';
 
 document.addEventListener('DOMContentLoaded', async () => {
   await initConfiguration();
@@ -44,7 +47,7 @@ async function initConfiguration() {
         SITE_CONFIG = { ...SITE_CONFIG, ...dataFallback };
         loaded = true;
       }
-    } catch (e) {}
+    } catch (e) { }
   }
 
   // 3. Try cached localStorage
@@ -54,7 +57,7 @@ async function initConfiguration() {
       try {
         const dataLocal = JSON.parse(cached);
         SITE_CONFIG = { ...SITE_CONFIG, ...dataLocal };
-      } catch (err) {}
+      } catch (err) { }
     }
   }
 
@@ -64,21 +67,27 @@ async function initConfiguration() {
 }
 
 /**
- * Initialize Meta Pixel dynamically with loaded Pixel ID
+ * Initialize Meta Pixel dynamically if configured ID changes
  */
 function initMetaPixel() {
   const pixelId = (SITE_CONFIG.metaPixelId || '').trim();
   if (!pixelId) {
-    console.log('[Meta Pixel] No Pixel ID configured yet. Set one in /pixcel');
+    console.log('[Meta Pixel] No Pixel ID configured.');
     return;
   }
 
   if (window.fbq) {
     try {
-      fbq('init', pixelId);
-      fbq('track', 'PageView');
-      console.log(`[Meta Pixel] Successfully initialized with ID: ${pixelId} & PageView fired.`);
-      
+      // If Pixel ID differs from base code, initialize and track PageView for new ID
+      if (pixelId !== currentInitializedPixelId) {
+        fbq('init', pixelId);
+        fbq('track', 'PageView');
+        currentInitializedPixelId = pixelId;
+        console.log(`[Meta Pixel] Switched and initialized with new ID: ${pixelId}`);
+      } else {
+        console.log(`[Meta Pixel] Active with ID: ${pixelId}`);
+      }
+
       // Update noscript tag if present
       const noscriptImg = document.getElementById('fb-pixel-noscript');
       if (noscriptImg) {
@@ -101,7 +110,7 @@ function applyActionLinks() {
   if (whatsappBtn) {
     const phone = (SITE_CONFIG.whatsappPhone || '').replace(/[^0-9]/g, '').trim();
     const msg = encodeURIComponent(SITE_CONFIG.whatsappMessage || '');
-    
+
     let waUrl = 'https://wa.me/';
     if (phone) {
       waUrl = `https://wa.me/${phone}?text=${msg}`;
@@ -110,17 +119,19 @@ function applyActionLinks() {
     }
     whatsappBtn.href = waUrl;
 
-    // Track Meta Pixel Lead & Contact Event on click
+    // Track Meta Pixel Lead & Contact Event on click (Business Tools Terms Compliant)
     whatsappBtn.addEventListener('click', () => {
-      if (window.fbq && SITE_CONFIG.metaPixelId) {
+      const activePixel = SITE_CONFIG.metaPixelId || currentInitializedPixelId;
+      if (window.fbq && activePixel) {
+        // COMPLIANT: Do not pass unhashed PII like phone_number in event parameters
         fbq('track', 'Contact', {
           content_name: 'WhatsApp Contact',
-          phone_number: phone
+          content_category: 'Direct Chat'
         });
         fbq('track', 'Lead', {
           content_name: 'WhatsApp Chat Initiated'
         });
-        console.log('[Meta Pixel] Event fired: Contact & Lead');
+        console.log('[Meta Pixel] Event fired: Contact & Lead (Compliant)');
       }
     });
   }
@@ -167,7 +178,7 @@ function setupVideoPlayer() {
   const ctrlMuteBtn = document.getElementById('ctrl-mute-btn');
   const ctrlSoundIcon = document.getElementById('ctrl-sound-icon');
   const ctrlFullscreenBtn = document.getElementById('ctrl-fullscreen-btn');
-  
+
   const timelineWrap = document.getElementById('video-timeline-wrap');
   const timelineProgress = document.getElementById('timeline-progress');
   const timeDisplay = document.getElementById('video-time-display');

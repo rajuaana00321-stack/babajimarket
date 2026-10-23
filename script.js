@@ -137,12 +137,11 @@ function applyActionLinks() {
     }
     telegramBtn.href = tgUrl;
 
-    // Track Meta Pixel Subscribe (custom) & Lead event on Telegram button click
+    // Track Meta Pixel Subscribe (custom) on Telegram button click only
     telegramBtn.addEventListener('click', () => {
       if (window.fbq) {
         fbq('trackCustom', 'Subscribe');
-        fbq('track', 'Lead');
-        console.log('[Meta Pixel] Event fired: Subscribe (custom) & Lead (Telegram)');
+        console.log('[Meta Pixel] Event fired: Subscribe (Telegram)');
       }
     });
   }

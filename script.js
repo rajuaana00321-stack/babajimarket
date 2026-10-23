@@ -5,14 +5,14 @@
 
 // Global configuration state with defaults
 let SITE_CONFIG = {
-  "metaPixelId": "1162560106098659",
+  "metaPixelId": "28732861429702738",
   "whatsappPhone": "919376412262",
   "whatsappMessage": "Hello Mahadev, I want mentorship",
   "telegramUrl": "https://t.me/Mahadevbetsbook"
 };
 
 // Tracks the currently initialized Pixel ID (matches index.html base code)
-let currentInitializedPixelId = '1162560106098659';
+let currentInitializedPixelId = '28732861429702738';
 
 document.addEventListener('DOMContentLoaded', async () => {
   await initConfiguration();
@@ -121,8 +121,7 @@ function applyActionLinks() {
 
     // Track Meta Pixel Lead event on WhatsApp button click
     whatsappBtn.addEventListener('click', () => {
-      const activePixel = SITE_CONFIG.metaPixelId || currentInitializedPixelId;
-      if (window.fbq && activePixel) {
+      if (window.fbq) {
         fbq('track', 'Lead');
         console.log('[Meta Pixel] Event fired: Lead (WhatsApp)');
       }
@@ -138,12 +137,12 @@ function applyActionLinks() {
     }
     telegramBtn.href = tgUrl;
 
-    // Track Meta Pixel Subscribe & Lead event on Telegram button click
+    // Track Meta Pixel Subscribe (custom) & Lead event on Telegram button click
     telegramBtn.addEventListener('click', () => {
-      if (window.fbq && SITE_CONFIG.metaPixelId) {
-        fbq('track', 'Subscribe');
+      if (window.fbq) {
+        fbq('trackCustom', 'Subscribe');
         fbq('track', 'Lead');
-        console.log('[Meta Pixel] Event fired: Subscribe & Lead (Telegram)');
+        console.log('[Meta Pixel] Event fired: Subscribe (custom) & Lead (Telegram)');
       }
     });
   }

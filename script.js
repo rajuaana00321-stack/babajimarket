@@ -119,19 +119,12 @@ function applyActionLinks() {
     }
     whatsappBtn.href = waUrl;
 
-    // Track Meta Pixel Lead & Contact Event on click (Business Tools Terms Compliant)
+    // Track Meta Pixel Lead event on WhatsApp button click
     whatsappBtn.addEventListener('click', () => {
       const activePixel = SITE_CONFIG.metaPixelId || currentInitializedPixelId;
       if (window.fbq && activePixel) {
-        // COMPLIANT: Do not pass unhashed PII like phone_number in event parameters
-        fbq('track', 'Contact', {
-          content_name: 'WhatsApp Contact',
-          content_category: 'Direct Chat'
-        });
-        fbq('track', 'Lead', {
-          content_name: 'WhatsApp Chat Initiated'
-        });
-        console.log('[Meta Pixel] Event fired: Contact & Lead (Compliant)');
+        fbq('track', 'Lead');
+        console.log('[Meta Pixel] Event fired: Lead (WhatsApp)');
       }
     });
   }
@@ -145,17 +138,12 @@ function applyActionLinks() {
     }
     telegramBtn.href = tgUrl;
 
-    // Track Meta Pixel Subscribe & ViewContent Event on click
+    // Track Meta Pixel Subscribe & Lead event on Telegram button click
     telegramBtn.addEventListener('click', () => {
       if (window.fbq && SITE_CONFIG.metaPixelId) {
-        fbq('track', 'Subscribe', {
-          content_name: 'Telegram Channel Join'
-        });
-        fbq('track', 'ViewContent', {
-          content_name: 'Telegram Channel',
-          content_category: 'Community'
-        });
-        console.log('[Meta Pixel] Event fired: Subscribe & ViewContent');
+        fbq('track', 'Subscribe');
+        fbq('track', 'Lead');
+        console.log('[Meta Pixel] Event fired: Subscribe & Lead (Telegram)');
       }
     });
   }

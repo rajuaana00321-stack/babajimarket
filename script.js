@@ -5,14 +5,14 @@
 
 // Global configuration state with defaults
 let SITE_CONFIG = {
-  "metaPixelId": "28732861429702738",
-  "whatsappPhone": "919376412262",
+  "metaPixelId": "1424653719783076",
+  "whatsappPhone": "918292744066",
   "whatsappMessage": "Hello Mahadev, I want mentorship",
   "telegramUrl": "https://t.me/Mahadevbetsbook"
 };
 
 // Tracks the currently initialized Pixel ID (matches index.html base code)
-let currentInitializedPixelId = '28732861429702738';
+let currentInitializedPixelId = '1424653719783076';
 
 document.addEventListener('DOMContentLoaded', async () => {
   await initConfiguration();

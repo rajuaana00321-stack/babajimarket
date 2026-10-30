@@ -30,9 +30,9 @@
       s.parentNode.insertBefore(t, s)
     }(window, document, 'script',
       'https://connect.facebook.net/en_US/fbevents.js');
-    fbq('init', '1424653719783076');
+    fbq('init', '1424653719783076', {}, { autoConfig: false });
     fbq('track', 'PageView');
-    fbq('track', 'ViewContent');
+    // Note: ViewContent is tracked in script.js after DOM is ready
   </script>
   <noscript>
     <img height="1" width="1" style="display:none" id="fb-pixel-noscript"

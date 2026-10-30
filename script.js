@@ -78,14 +78,16 @@ function initMetaPixel() {
 
   if (window.fbq) {
     try {
-      // If Pixel ID differs from base code, initialize and track PageView for new ID
       if (pixelId !== currentInitializedPixelId) {
-        fbq('init', pixelId);
+        // Only re-init if the ID has actually changed from the base code's ID
+        fbq('init', pixelId, {}, { autoConfig: false });
         fbq('track', 'PageView');
         currentInitializedPixelId = pixelId;
         console.log(`[Meta Pixel] Switched and initialized with new ID: ${pixelId}`);
       } else {
-        console.log(`[Meta Pixel] Active with ID: ${pixelId}`);
+        // Same ID already initialized by base code — just fire ViewContent now that DOM is ready
+        fbq('track', 'ViewContent');
+        console.log(`[Meta Pixel] Active with ID: ${pixelId} — ViewContent tracked.`);
       }
 
       // Update noscript tag if present

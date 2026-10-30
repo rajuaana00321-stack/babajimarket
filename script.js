@@ -85,8 +85,13 @@ function initMetaPixel() {
         currentInitializedPixelId = pixelId;
         console.log(`[Meta Pixel] Switched and initialized with new ID: ${pixelId}`);
       } else {
-        // Same ID already initialized by base code — just fire ViewContent now that DOM is ready
-        fbq('track', 'ViewContent');
+        // Same ID already initialized by base code — fire ViewContent with proper params
+        fbq('track', 'ViewContent', {
+          content_name: 'MAHADEV Mentorship Landing Page',
+          content_category: 'Education & Mentorship',
+          content_type: 'website',
+          content_ids: ['mahadev-mentorship-page']
+        });
         console.log(`[Meta Pixel] Active with ID: ${pixelId} — ViewContent tracked.`);
       }
 
@@ -121,11 +126,15 @@ function applyActionLinks() {
     }
     whatsappBtn.href = waUrl;
 
-    // Track Meta Pixel Lead event on WhatsApp button click
+    // Track Meta Pixel Lead + Contact events on WhatsApp button click
     whatsappBtn.addEventListener('click', () => {
       if (window.fbq) {
-        fbq('track', 'Lead');
-        console.log('[Meta Pixel] Event fired: Lead (WhatsApp)');
+        fbq('track', 'Lead', {
+          content_name: 'WhatsApp Mentorship Inquiry',
+          content_category: 'Education & Mentorship'
+        });
+        fbq('track', 'Contact');
+        console.log('[Meta Pixel] Events fired: Lead + Contact (WhatsApp)');
       }
     });
   }
@@ -139,11 +148,16 @@ function applyActionLinks() {
     }
     telegramBtn.href = tgUrl;
 
-    // Track Meta Pixel Subscribe (custom) on Telegram button click only
+    // Track Meta Pixel Subscribe + Contact on Telegram button click
     telegramBtn.addEventListener('click', () => {
       if (window.fbq) {
-        fbq('trackCustom', 'Subscribe');
-        console.log('[Meta Pixel] Event fired: Subscribe (Telegram)');
+        fbq('track', 'Subscribe', {
+          content_name: 'Mahadev Telegram Channel',
+          currency: 'INR',
+          value: 0
+        });
+        fbq('track', 'Contact');
+        console.log('[Meta Pixel] Events fired: Subscribe + Contact (Telegram)');
       }
     });
   }
@@ -238,13 +252,16 @@ function setupVideoPlayer() {
         ctrlPlayIcon.innerHTML = '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>';
       }
 
-      // Track Custom VideoPlay Event once
+      // Track ViewContent (video) once on first play — standard event Meta counts
       if (!hasTrackedVideoPlay && window.fbq && SITE_CONFIG.metaPixelId) {
         hasTrackedVideoPlay = true;
-        fbq('trackCustom', 'VideoPlay', {
-          video_title: 'MAHADEV Educational Promo'
+        fbq('track', 'ViewContent', {
+          content_name: 'MAHADEV Educational Promo Video',
+          content_category: 'Education & Mentorship',
+          content_type: 'video',
+          content_ids: ['mahadev-promo-video']
         });
-        console.log('[Meta Pixel] Custom event fired: VideoPlay');
+        console.log('[Meta Pixel] Standard event fired: ViewContent (Video Play)');
       }
     } else {
       if (videoWrapper) videoWrapper.classList.add('is-paused');
